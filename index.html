@@ -7,10 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
-<body class="bg-gray-100 p-5">
+<body class="bg-gray-100 p-5" id="appBody">
     <!-- Закрепленный верхний бар -->
-    <div class="fixed top-0 left-0 right-0 bg-white shadow-md p-4 flex justify-between items-center z-50">
+    <div class="fixed top-0 left-0 right-0 bg-white shadow-md p-4 flex justify-between items-center z-50" id="topBar">
         <div>
             <p class="text-gray-800 font-semibold">📞 +7 (999) 123-45-67</p>
             <a href="https://t.me/yabukaev" target="_blank" class="bg-blue-500 text-white px-3 py-2 rounded mt-2 inline-block">Telegram</a>
@@ -39,7 +40,7 @@
         </div>
         
         <!-- Круговые графики пользователей -->
-        <div class="grid grid-cols-1 md-grid-cols-2 gap-5 mb-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
             <div class="bg-white p-5 rounded-xl shadow-lg">
                 <h2 class="text-xl font-semibold mb-3">Распределение пользователей по полу</h2>
                 <canvas id="genderChart"></canvas>
@@ -74,36 +75,29 @@
     </div>
 
     <script>
-        document.getElementById("loginBtn").addEventListener("click", function() {
-            document.getElementById("loginForm").classList.toggle("hidden");
-        });
-
-        document.getElementById("submitLogin").addEventListener("click", function() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            alert("Логин: " + username + "\nПароль: " + password);
-        });
-
-        // Инициализация графиков
         document.addEventListener("DOMContentLoaded", function() {
+            const tg = window.Telegram.WebApp;
+            tg.expand();
+            document.body.style.background = tg.themeParams.bg_color || "#f3f4f6";
+            
+            document.getElementById("loginBtn").addEventListener("click", function() {
+                document.getElementById("loginForm").classList.toggle("hidden");
+            });
+            
+            document.getElementById("submitLogin").addEventListener("click", function() {
+                const username = document.getElementById("username").value;
+                const password = document.getElementById("password").value;
+                alert("Логин: " + username + "\nПароль: " + password);
+            });
+            
             const qrCtx = document.getElementById("qrChart").getContext("2d");
             new Chart(qrCtx, {
                 type: "line",
                 data: {
                     labels: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
                     datasets: [
-                        {
-                            label: "Сканирования",
-                            data: [12, 19, 3, 5, 2, 3, 7],
-                            borderColor: "#36A2EB",
-                            fill: false
-                        },
-                        {
-                            label: "Новые пользователи",
-                            data: [5, 8, 2, 3, 1, 4, 6],
-                            borderColor: "#FF6384",
-                            fill: false
-                        }
+                        { label: "Сканирования", data: [12, 19, 3, 5, 2, 3, 7], borderColor: "#36A2EB", fill: false },
+                        { label: "Новые пользователи", data: [5, 8, 2, 3, 1, 4, 6], borderColor: "#FF6384", fill: false }
                     ]
                 }
             });
@@ -113,10 +107,7 @@
                 type: "doughnut",
                 data: {
                     labels: ["Мужчины", "Женщины", "Иное"],
-                    datasets: [{
-                        data: [45, 50, 5],
-                        backgroundColor: ["#36A2EB", "#FF6384", "#FFCE56"]
-                    }]
+                    datasets: [{ data: [45, 50, 5], backgroundColor: ["#36A2EB", "#FF6384", "#FFCE56"] }]
                 }
             });
 
@@ -125,10 +116,7 @@
                 type: "doughnut",
                 data: {
                     labels: ["<18", "18-25", "26-35", "36-45", "46+"],
-                    datasets: [{
-                        data: [10, 30, 25, 20, 15],
-                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"]
-                    }]
+                    datasets: [{ data: [10, 30, 25, 20, 15], backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"] }]
                 }
             });
         });
